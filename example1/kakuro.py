@@ -1,6 +1,23 @@
 #!/usr/bin/python
 import sys
 
+class Cell(object):
+    def __init__(self,row,col):
+        self.row = row
+        self.col = col
+    def __str__(self):
+        return "("+str(self.row)+","+str(self.col)+")"
+class Rule(object):
+    def __init__(self,value,cells):
+        self.cells = cells
+        self.value = value    
+    def __str__(self):
+        retStr = "value="+str(self.value)+ " cells=[ "
+        for cell in self.cells:
+            retStr+=str(cell)+" "
+        retStr+="]"
+        return retStr
+
 FRSTVALUE = ord('A')
 
 #Get content from file 
@@ -32,19 +49,25 @@ if len(sums) < 2:
     print "Configuration cells  are wrong"
 
 #Set up matr with values
-matr=[x[:] for x in [[0]*size_rows]*size_cols]
+#matr=[x[:] for x in [[0]*size_rows]*size_cols]
+rules = []
 #rows x cols
 for params in sum_params:
     params = params.split(' ')
     value = int(params[0])
+    cells = []
     for posic in params[1:]:
         col = ord(str(posic)[0])-FRSTVALUE
-        row = int(str(posic)[1]) -1 
-        matr[col][row] = value
+        row = int(str(posic)[1]) -1
+        cell = Cell(row,col)
+        cells.append(cell)
+    rules.append(Rule(value,cells))
 
 
 
-print matr
+for rule in rules:
+    print rule
+
 print cols
 print rows
 print content
