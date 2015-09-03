@@ -7,6 +7,15 @@ class Cell(object):
         self.col = col
     def __str__(self):
         return "("+str(self.row)+","+str(self.col)+")"
+
+class SolvedCell(object):
+    def __init__(self,row,col,value):
+        self.value=value
+        self.row = row
+        self.col = col
+    def __str__(self):
+        return "("+str(self.row)+","+str(self.col)+") value="+str(self.value)
+    
 class Rule(object):
     def __init__(self,value,cells):
         self.cells = cells
@@ -67,6 +76,15 @@ for params in sum_params:
 
 for rule in rules:
     print rule
+
+
+board=[x[:] for x in [[0]*size_rows]*size_cols]
+
+solvedCells=[]
+for rule in rules:
+
+    solvedCells.append(solvedCell)
+
 
 print cols
 print rows
