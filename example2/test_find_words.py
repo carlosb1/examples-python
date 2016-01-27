@@ -35,9 +35,10 @@ class TestFindWords(unittest.TestCase):
 	
         def test_load_dictionary(self):
 		dic = load_dictionary("./dictionary.txt")
-		print dic["work"]
-                print dic["man"]
-                print dic["workman"]
+		self.assertEquals(dic["work"],"work")
+                self.assertEquals(dic["man"],"man")
+                self.assertEquals(dic["workman"],"workman")
+
 	def test_generate_random_letters(self):
 		values = generate_random_letters(10)
 		self.assertTrue(len(values) > 0)
@@ -47,7 +48,8 @@ class TestFindWords(unittest.TestCase):
                 dictionary = load_dictionary("./dictionary.txt")
                 finder = WordFinder(dictionary)
                 correct_words = finder.create_possible_words(values)
-                print correct_words
+		print correct_words
+                #self.assertTrue(len(correct_words)==4)
 
 
         def test_possible_words(self):
@@ -55,15 +57,37 @@ class TestFindWords(unittest.TestCase):
                 dictionary = load_dictionary("./dictionary.txt")
                 finder = WordFinder(dictionary)
                 correct_words = finder.create_possible_words(values)
-                print "test_possible_word",correct_words
+		print correct_words
+		#self.assertTrue(len(correct_words)==2)
+        def test_one_letter_incorrect_character(self):
+		dictionary = load_dictionary("./dictionary.txt") 
+                letters = ['z']
+                finder = WordFinder(dictionary)
+                values = finder.find(letters)
+		print values
+		#self.assertTrue(values[0])
 
-        def test_first_case(self):
-		dictionary = load_dictionary("./dictionary.txt")
-                
+	def test_one_letter(self):
+		dictionary = load_dictionary("./dictionary.txt") 
                 letters = ['a']
                 finder = WordFinder(dictionary)
-                #finder.find(letters)
-		#print values
+                values = finder.find(letters)
+		print values
+		#self.assertTrue(values[0])
+
+        def test_simple_word(self):
+		dictionary = load_dictionary("./dictionary.txt") 
+                letters = ['h','e','l','l','o']
+                finder = WordFinder(dictionary)
+                values = finder.find(letters)
+		print values
+#        
+#	def test_simple_words(self):
+#		dictionary = load_dictionary("./dictionary.txt") 
+#                letters = ['h','e','l','l','o','w','o','r','l','d']
+#                finder = WordFinder(dictionary)
+#                values = finder.find(letters)
+#		return values
 
 if __name__ == '__main__':
 	unittest.main()
