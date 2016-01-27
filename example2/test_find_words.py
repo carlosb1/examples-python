@@ -1,5 +1,5 @@
 import unittest
-from find_words import find_words
+from find_words import WordFinder
 import os
 import string
 
@@ -32,18 +32,38 @@ class TestFindWords(unittest.TestCase):
 	def test_load_dictionary(self):
 		dic = load_dictionary("./dictionary.txt")
 		self.assertTrue(len(dic) > 0)
+	
+        def test_load_dictionary(self):
+		dic = load_dictionary("./dictionary.txt")
+		print dic["work"]
+                print dic["man"]
+                print dic["workman"]
 	def test_generate_random_letters(self):
 		values = generate_random_letters(10)
-		print values
 		self.assertTrue(len(values) > 0)
+        
+        def test_possible_words_simple_word(self):
+                values = ['z','o','o']
+                dictionary = load_dictionary("./dictionary.txt")
+                finder = WordFinder(dictionary)
+                correct_words = finder.create_possible_words(values)
+                print correct_words
 
-	def test_normal_case(self):
+
+        def test_possible_words(self):
+                values = ['w','o','r','k','m','a','n']
+                dictionary = load_dictionary("./dictionary.txt")
+                finder = WordFinder(dictionary)
+                correct_words = finder.create_possible_words(values)
+                print "test_possible_word",correct_words
+
+        def test_first_case(self):
 		dictionary = load_dictionary("./dictionary.txt")
-		values = generate_random_letters(30)
-		phrase = find_words(dictionary,)
-
-
-		pass
+                
+                letters = ['a']
+                finder = WordFinder(dictionary)
+                #finder.find(letters)
+		#print values
 
 if __name__ == '__main__':
 	unittest.main()
