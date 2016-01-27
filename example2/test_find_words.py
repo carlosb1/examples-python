@@ -13,8 +13,9 @@ def load_dictionary(filename):
 		content = f.readlines()
 	
 	for word in content:
-		word = re.sub('[^a-zA-Z0-9-_*.]','',word)	
-		dictionary[word]=word
+		word = re.sub('[^a-zA-Z0-9-_*.]','',word)
+		if len(word) > 0:
+			dictionary[word]=word
 
 	return dictionary
 
@@ -81,13 +82,13 @@ class TestFindWords(unittest.TestCase):
                 finder = WordFinder(dictionary)
                 values = finder.find(letters)
 		print values
-#        
-#	def test_simple_words(self):
-#		dictionary = load_dictionary("./dictionary.txt") 
-#                letters = ['h','e','l','l','o','w','o','r','l','d']
-#                finder = WordFinder(dictionary)
-#                values = finder.find(letters)
-#		return values
+        
+	def test_simple_words(self):
+		dictionary = load_dictionary("./dictionary.txt") 
+                letters = ['h','e','l','l','o','w','o','r','l','d']
+                finder = WordFinder(dictionary)
+                values = finder.find(letters)
+                print values
 
 if __name__ == '__main__':
 	unittest.main()
