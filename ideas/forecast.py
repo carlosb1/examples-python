@@ -61,9 +61,24 @@ print json_values
 for value in json_values:
     #Parse times
     local_timestamp = value["localTimestamp"]
-    print timestamp2String(local_timestamp)
-
-
+    solid_rating = value["solidRating"]
+    faded_rating = value["fadedRating"]
+    chart_wind =  value["charts"]["wind"]
+    chart_period =  value["charts"]["period"]
+   # chart_sst =  value["charts"]["sst"] #Honda
+    wind_direction = value["wind"]["direction"]
+    wind_compass_direction = value["wind"]["compassDirection"] #Brujula
+    wind_speed = value["wind"]["speed"]
+    wind_unit = value["wind"]["unit"]
+    wind_chill = value["wind"]["chill"] #Frio
+    
+    print "time: "+timestamp2String(local_timestamp)+" solidRating="+str(solid_rating)+" fadedRating="+str(faded_rating)
+    print "chart_wind: "+str(chart_wind)
+    print "chart_period: "+str(chart_period)
+   # print "chart_sst: "+str(chart_sst)
+    print "wind_direction: "+str(wind_direction)+" wind_compass_direction: "+wind_compass_direction
+    print "wind_speed: "+str(wind_speed)+ " "+str(wind_unit)
+    print "wind_chill: "+str(wind_chill)
 
 
 
