@@ -6,20 +6,28 @@ import hashlib
 import time
 from celery import Celery
 
+from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
+from sqlalchemy import create_engine
+
+Base = declarative_base()
 
 #define object
-class InfoSpot(object):
-    def __init__(self,local_timestamp,solid_rating,faded_rating,chart_wind,chart_period,wind_direction,wind_compass_direction, wind_unit, wind_chill, wind_speed):
-        self.local_timestamp = local_timestamp
-        self.solid_rating = solid_rating
-        self.faded_rating = faded_rating
-        self.chart_wind = chart_wind
-        self.chart_period = chart_period
-        self.wind_direction = wind_direction
-        self.wind_compass_direction = wind_compass_direction
-        self.wind_unit = wind_unit
-        self.wind_chill = wind_chill
-        self.wind_speed = wind_speed
+class InfoSpot(Base):
+    __tablename__ = 'infospot'
+    id= Column(Integer,primary_key=True)
+    solid_rating = Column(Integer)
+    faded_rating = Column(Integer)
+    chart_wind_url = Column(String)
+    chart_period_url = Column(String)
+    wind_direction = Column(Integer)
+    wind_compass_direction = Column(String)
+    wind_speed = Column(Integer)
+    wind_type_speed = Column(String)
+    wind_chill = Column(Integer)
+    wind_unit = Column(String)
+    local_timestamp = Column(String)
 
 
 
@@ -41,26 +49,14 @@ secret = content[1].split(":")[1].rstrip().lstrip().strip()
 
 
 #SQL alchemy
-from sqlalchemy import *
-db = create_engine('sqlite:///spots.db')
-db.echo = False
-metad MetaData(db)
-#id
-spots = Table('spots',metadata,
-        Column('id_post',String(40)),
-        Column('time',String(30)),
-        Column('solid_rating',Integer),
-        Column('faded_rating',Integer),
-        Column('chart_wind_url',String),
-        Column('chart_period_url',String),
-        Column('wind_direction',Integer),
-        Column('wind_compass_direction',String),
-        Column('wind_speed',Integer),
-        Column('wind_type_speed',String),
-        Column('wind_chill',Integer)
-        )
-spots.create()
-db_ins = spots.insert()
+engine = create_engine('sqlite:///spots3.db')
+Base.metadata.create_all(engine)
+
+from sqlalchemy.orm import sessionmaker
+
+Base.metadata.bind = engine
+DBSession = sessionmaker(bind=engine)
+session = DBSession()
 
 
 #Defined spots
@@ -89,8 +85,8 @@ for value in json_values:
     local_timestamp = value["localTimestamp"]
     solid_rating = value["solidRating"]
     faded_rating = value["fadedRating"]
-    chart_wind =  value["charts"]["wind"]
-    chart_period =  value["charts"]["period"]
+    chart_wind_url =  value["charts"]["wind"]
+    chart_period_url =  value["charts"]["period"]
    # chart_sst =  value["charts"]["sst"] #Honda
     wind_direction = value["wind"]["direction"]
     wind_compass_direction = value["wind"]["compassDirection"] #Brujula
@@ -101,12 +97,20 @@ for value in json_values:
 
     
     print "time: "+timestamp2String(local_timestamp)+" solidRating="+str(solid_rating)+" fadedRating="+str(faded_rating)
-    print "chart_wind: "+str(chart_wind)
-    print "chart_period: "+str(chart_period)
+    print "chart_wind: "+str(chart_wind_url)
+    print "chart_period: "+str(chart_period_url)
    # print "chart_sst: "+str(chart_sst)
     print "wind_direction: "+str(wind_direction)+" wind_compass_direction: "+wind_compass_direction
     print "wind_speed: "+str(wind_speed)+ " "+str(wind_unit)
     print "wind_chill: "+str(wind_chill)
+
+    spot = InfoSpot(local_timestamp=local_timestamp,solid_rating=solid_rating,faded_rating=faded_rating
+            ,chart_wind_url=chart_wind_url,chart_period_url=chart_period_url,wind_direction=wind_direction
+            ,wind_compass_direction=wind_compass_direction, wind_unit=wind_unit
+            ,wind_chill=wind_chill, wind_speed=wind_speed)
+
+    session.add(spot)
+    session.commit()
 
 
 
