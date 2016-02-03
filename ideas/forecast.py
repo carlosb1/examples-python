@@ -28,7 +28,7 @@ class InfoSpot(Base):
     wind_chill = Column(Integer)
     wind_unit = Column(String)
     local_timestamp = Column(Integer)
-    id_spot = Column(String)
+    id_spot = Column(Integer)
 
     def __str__(self):
         """testing function."""
@@ -44,21 +44,30 @@ class InfoSpot(Base):
         +' wind_chill='+str(self.wind_chill)
         +' wind_unit='+str(self.wind_unit)
         +' local_timestamp='+str(self.local_timestamp)
-
         return result
 
 def timestamp_to_string(timestamp):
     """testing function."""
     return datetime.datetime.fromtimestamp(int(timestamp)).strftime('%Y-%m-%d %H:%M:%S')
 
+def set_up_msg(id_spot,local_timestamp, wind_speed, wind_unit,  wind_compass_direction, solid_rating, faded_rating, chart_wind_url, chart_period_url):
+    """Set up message email."""
+
+    msg = "ID_SPOT: "+str(id_spot)+" SOLID RATE: "+str(solid_rating)+" FADED RATE: "+str(faded_rating)+"<br/>"+"TIMESTAMP: "+timestamp_to_string(local_timestamp)+"<br/>"+"WIND: "+str(wind_speed)+" "+str(wind_unit)+"<br/>"+"MAP WIND: "+"<img src=\""+str(chart_wind_url)+"\"/><br/> MAP PERIOD: "+str(chart_period_url)+"<br/>"
+    if solid_rating > 0 or faded_rating > 0:
+        msg = "<b>"+msg+"</b>"
+    return msg
 
 # API Reader
 class ApiReader(object):
     """Docstring for MyClass."""
 
-    def __init__(self, key, id_spot, session):
+    def __init__(self, key, id_spot, session,user,passwd,dest):
         """testing function."""
         self.id_spot = id_spot
+        self.user = user
+        self.passwd = passwd
+        self.dest = dest
         self.key = key
         self.url = 'http://magicseaweed.com/api/'+str(self.key)+'/forecast/?spot_id='+str(self.id_spot)+'&units=eu&fields=timestamp,localTimestamp,fadedRating,solidRating,threeHourTimeText,wind.*,condition.temperature,charts.*'
         self.session = session
@@ -67,6 +76,7 @@ class ApiReader(object):
         """testing function."""
         r = requests.get(self.url)
         json_values = r.json()
+        msgs = ""
         for value in json_values:
             #Parse times
             local_timestamp = value['localTimestamp']
@@ -96,9 +106,35 @@ class ApiReader(object):
                     local_timestamp=local_timestamp,
                     id_spot=self.id_spot
                     )
+
+            msg = set_up_msg(self.id_spot,local_timestamp,wind_speed,wind_unit,wind_compass_direction,solid_rating,faded_rating,chart_wind_url,chart_period_url)
+            msgs = msgs+msg+'\n'
+    
             if not self.session.query(exists().where(InfoSpot.local_timestamp == local_timestamp).where(InfoSpot.id_spot == self.id_spot)).scalar():
                 self.session.add(spot)
                 self.session.commit()
+        #TODO parametr. parameters
+        send_email(self.user,self.dest,"Wave report",msgs,self.passwd)
+
+
+def send_email(fromaddr, toaddr, subject, msg,passwd):
+    """Send email via gmail."""
+    import smtplib
+    server = smtplib.SMTP_SSL('smtp.gmail.com:465')
+    server.ehlo()
+    server.login(fromaddr,passwd)
+    headers = "\r\n".join(["From: " + fromaddr,
+                        "To: " + toaddr,
+                        "subject: "+ subject,
+                        "mime-version: 1.0",                                
+                        "content-type: text/html"])
+
+    content = headers + "\r\n\r\n" + msg
+
+    print content
+    server.sendmail(fromaddr,toaddr,content)
+    server.close()
+
 
 #Read file configuration
 fname = 'secret_forecast'
@@ -108,6 +144,9 @@ with open(fname) as f:
 #TODO  get content correctly (via dict)
 key = content[0].split(':')[1].rstrip().lstrip().strip()
 secret = content[1].split(':')[1].rstrip().lstrip().strip()
+username = content[2].split(":")[1].rstrip().lstrip().strip()
+password = content[3].split(":")[1].rstrip().lstrip().strip()
+dest = content[4].split(":")[1].rstrip().lstrip().strip()
 
 
 
@@ -126,8 +165,9 @@ celery = Celery('forecast')
 celery.config_from_object('celeryconfig')
 
 #Defined spots
+#TODO add waves
 idBarceloneta = 3535
-reader = ApiReader(key,idBarceloneta,session)
+reader = ApiReader(key,idBarceloneta,session,username,password,dest)
 
 
 @celery.task
