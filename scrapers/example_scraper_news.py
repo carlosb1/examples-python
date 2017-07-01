@@ -1,5 +1,5 @@
+#check info
 #import urllib2
-
 #response = urllib2.urlopen('http://elpais.com')
 #with open('test.html','w') as fil:
 #    fil.write(response.read())
@@ -11,6 +11,10 @@ def download_url(url):
     return response.read()
     
 
+class DownloaderURLLIB2():
+    import urllib2
+    response = urllib2.urlopen(url)
+    return response.read()
 
 class FakeDownloader():
     name = 'test.html'
@@ -89,4 +93,6 @@ class TestScrapper(unittest.TestCase):
         for link in info:
             self.assertTrue(link.startswith('http')) 
 
-    
+
+
+
