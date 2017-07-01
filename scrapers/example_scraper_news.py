@@ -12,17 +12,6 @@ def download_url(url):
     
 
 
-#info = download_url('http://elpais.com')
-#from bs4 import BeautifulSoup
-
-#parsed = BeautifulSoup(info,'lxml')
-
-#for cls in parsed.select('div[class*="articulo"]'):
-#    for link in cls.select('a[href]'):
-#        print link.get('href')
-
-
-
 class FakeDownloader():
     name = 'test.html'
     def set_name(self,name):
