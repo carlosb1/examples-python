@@ -1,29 +1,60 @@
-#check info
-#import urllib2
-#response = urllib2.urlopen('http://elpais.com')
-#with open('test.html','w') as fil:
-#    fil.write(response.read())
 
+import urllib2
+import string 
 
-
-
-
-def download_url(url):
-    import urllib2
-    response = urllib2.urlopen(url)
-    return response.read()
-    
-
+import shutil,os
 class DownloaderURLLIB2():
     name = 'test.html'
+    repositories_download="repositories.txt"
+    black_list = []
     def set_name(self,name):
         self.name = name
     def get(self,url):
         import urllib2
         response = urllib2.urlopen(url)
         return response.read()
+    def download(self,url,dir_down="downloaded/"):
+        proxy = ProxyProvider(self.repositories_download)
+         
+        #shutil.rmtree(dir_down,ignore_errors=True)
+        if not os.path.exists(dir_down): 
+            os.makedirs(dir_down)
 
-class FakeDownloader():
+        num_proxies = len(proxy.proxies)
+        tr = 0
+        while tr < 5:
+            candidate = proxy.proxies[randint(0,num_proxies-1)]
+            try:
+                if url in self.black_list:
+                    return
+                print "connecting url: ",url
+                new_url=''.join(e for e in url if e.isalnum())
+                print "using proxy: ",str(candidate[1][0])+":"+str(candidate[1][1])
+                proxy_url = str(candidate[1][0])+":"+str(candidate[1][1])
+
+                proxy_support = urllib2.ProxyHandler({"http":'http://'+proxy_url})
+                opener = urllib2.build_opener(proxy_support)
+                urllib2.install_opener(opener)
+                info = urllib2.urlopen(url,timeout=10)
+                with open(dir_down+"/"+new_url,"w") as fil:
+                    fil.seek(0)
+                    fil.write(info.read())
+                    fil.close()
+                print "trying to save information"
+                return
+            except Exception as e:
+                print "It was not possible download info: ", e
+                self.black_list.append(url)
+
+            tr+=1
+        
+        self.black_list.append(url)
+
+
+import urllib
+from random import randint
+
+class FakeDownloader(DownloaderURLLIB2):
     name = 'test.html'
     def set_name(self,name):
         self.name = name
@@ -42,14 +73,19 @@ class LinkParser:
         parsedInfo = BeautifulSoup(data,'lxml')
         for link in  parsedInfo.select('a[href]'):
             text = link.get('href')
+            print str(text.encode('utf8'))
             text = self.add_prefix(text,url)
             if self.is_correct_link(text):
-                self.links.append(text)
+                if not text in self.links:
+                    self.links.append(text)
         return parsedInfo
 
     def add_prefix(self,text,url):
+        if text.startswith('//'):
+            return "http:"+text
         if text.startswith('/'):
             text=url+text
+            return text
         return text
     def is_correct_link(self,text):
         return text.startswith('http')
@@ -59,7 +95,8 @@ class FakeParser:
     def execute(self,url,data):
         return ""
 
-
+import time
+import random
 class Scrapper:
     def __init__(self,downloader, parser):
         self.downloader = downloader
@@ -70,8 +107,14 @@ class Scrapper:
         self.parser.execute(url,info)
         return info
 
+    def download_links(self):
+       for link in self.parser.links:
+           print "trying to download this link: ",link
+           time.sleep(random.randint(0,1000) / 100)
+           self.downloader.download(link,"downloader/")
+
+
 import os
-import urllib
 import heapq
 class ProxyProvider:
     repositories = []
@@ -147,6 +190,13 @@ class TestScrapper(unittest.TestCase):
         for link in info:
             self.assertTrue(link.startswith('http')) 
 
+#TODO not a correct test!!
+    def test_should_start_http_download_links(self):
+        downloader = FakeDownloader()
+        parser = LinkParser()
+        scrapper = Scrapper(downloader,parser)
+        #TODO check input
+        scrapper.run('http://elpais.com')
 
-
+        scrapper.download_links()
 
