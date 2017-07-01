@@ -94,8 +94,10 @@ class ProxyProvider:
                 for possible_address in fil.readlines():
                     address=possible_address.split(':')
                     if len(address) == 2:
-                       heapq.heappush(self.proxies,(1,[str(address[0]),int(address[1])]))
-        
+                        try:
+                            heapq.heappush(self.proxies,(1,[str(address[0]),int(address[1])]))
+                        except:
+                            print "It was not possible to save proxy address "+str(address)
 import unittest
 
 
