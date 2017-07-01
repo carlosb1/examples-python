@@ -69,10 +69,39 @@ class Scrapper:
         info = self.downloader.get(url)
         self.parser.execute(url,info)
         return info
-        
-   
 
+import os
+import urllib
+import bintrees
+class ProxyProvider:
+    repositories = []
+    proxy_names = []
+    def __init__(self,filename):
+        self.filename = filename
+        with open(filename,'r') as fil:
+            self.repositories = [repository for repository in fil.readlines()]
+        self.proxies = bintrees.RBTree()
+
+    def load(self):
+        index=0
+        for repository in self.repositories:
+            name_proxy = "proxy_list"+str(index)
+            urllib.urlretrieve (repository,name_proxy)
+            self.proxy_names.append(name_proxy)
+            index+=1
+#        for proxy_name in self.proxy_names: 
 import unittest
+
+
+class TestRepository(unittest.TestCase):
+    def test_should_be_initialised_with_one_repository(self):
+        proxy = ProxyProvider('repositories.txt')
+        self.assertTrue(len(proxy.repositories)==1)
+
+    def test_load_available_proxies_from_one_repository(self):
+        proxy = ProxyProvider('repositories.txt')
+        proxy.load()
+        self.assertTrue(len(proxy.proxy_names)>0)
 
 class TestScrapper(unittest.TestCase):
     def test_read_url(self):
@@ -104,7 +133,6 @@ class TestScrapper(unittest.TestCase):
         info = scrapper.parser.links
         for link in info:
             self.assertTrue(link.startswith('http')) 
-
 
 
 
