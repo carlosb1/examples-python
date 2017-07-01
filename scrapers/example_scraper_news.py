@@ -72,15 +72,15 @@ class Scrapper:
 
 import os
 import urllib
-import bintrees
+import heapq
 class ProxyProvider:
     repositories = []
     proxy_names = []
+    proxies = []
     def __init__(self,filename):
         self.filename = filename
         with open(filename,'r') as fil:
             self.repositories = [repository for repository in fil.readlines()]
-        self.proxies = bintrees.RBTree()
 
     def load(self):
         index=0
@@ -89,7 +89,13 @@ class ProxyProvider:
             urllib.urlretrieve (repository,name_proxy)
             self.proxy_names.append(name_proxy)
             index+=1
-#        for proxy_name in self.proxy_names: 
+        for proxy_name in self.proxy_names:
+            with open(proxy_name,'r') as fil:
+                for possible_address in fil.readlines():
+                    address=possible_address.split(':')
+                    if len(address) == 2:
+                       heapq.heappush(self.proxies,(1,[str(address[0]),int(address[1])]))
+        
 import unittest
 
 
@@ -102,6 +108,11 @@ class TestRepository(unittest.TestCase):
         proxy = ProxyProvider('repositories.txt')
         proxy.load()
         self.assertTrue(len(proxy.proxy_names)>0)
+
+    def test_load_proxies_from_list_repositorues(self):
+        proxy = ProxyProvider('repositories.txt')
+        proxy.load()
+        self.assertTrue(len(proxy.proxies)>0)
 
 class TestScrapper(unittest.TestCase):
     def test_read_url(self):
