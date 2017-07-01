@@ -5,6 +5,9 @@
 #    fil.write(response.read())
 
 
+
+
+
 def download_url(url):
     import urllib2
     response = urllib2.urlopen(url)
@@ -12,9 +15,13 @@ def download_url(url):
     
 
 class DownloaderURLLIB2():
-    import urllib2
-    response = urllib2.urlopen(url)
-    return response.read()
+    name = 'test.html'
+    def set_name(self,name):
+        self.name = name
+    def get(self,url):
+        import urllib2
+        response = urllib2.urlopen(url)
+        return response.read()
 
 class FakeDownloader():
     name = 'test.html'
@@ -35,12 +42,17 @@ class LinkParser:
         parsedInfo = BeautifulSoup(data,'lxml')
         for link in  parsedInfo.select('a[href]'):
             text = link.get('href')
-            #move to function
-            if text.startswith('/'):
-                text=url+text
-            if text.startswith('http'): 
+            text = self.add_prefix(text,url)
+            if self.is_correct_link(text):
                 self.links.append(text)
         return parsedInfo
+
+    def add_prefix(self,text,url):
+        if text.startswith('/'):
+            text=url+text
+        return text
+    def is_correct_link(self,text):
+        return text.startswith('http')
 
 class FakeParser:
     links = []
@@ -92,6 +104,7 @@ class TestScrapper(unittest.TestCase):
         info = scrapper.parser.links
         for link in info:
             self.assertTrue(link.startswith('http')) 
+
 
 
 
