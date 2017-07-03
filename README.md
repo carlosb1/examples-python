@@ -5,3 +5,6 @@ example1/kakuro.py
 
 scrapers:
 - Simple scrap python tool, to save daily news in order to apply some ML algorithms. Incomplete yet..
+
+subset-sum
+ - Solutions for subset-sum problems
