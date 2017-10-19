@@ -39,13 +39,13 @@ while (True):
         thres_near+=1
         print "Incr thres_near ",thres_near
     elif key == ord('e'):
-        current_param2+step_current_param2
+        current_param2+=step_current_param2
         print "Incr param2 ",current_param2
     elif key == ord('c') and thres_near > 0:
         thres_near-=1
         print "Decr thres_near ",thres_near
     elif key == ord('d'):
-        current_param2-step_current_param2
+        current_param2-=step_current_param2
         print "Decr param2 ",current_param2
 
 
