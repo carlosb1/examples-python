@@ -31,13 +31,40 @@ def unpickle_keypoints(array):
   return keypoints, np.array(descriptors), img
 
 
-
+class ORBFeature:
+    def __init__(self):
+        self.orb = cv2.ORB_create()
+    def apply(self,gray):
+        return self.orb.detectAndCompute(gray,None)
 
 class SIFTFeature:
     def __init__(self):
         self.sift = cv2.xfeatures2d.SIFT_create()
     def apply(self,gray):
         return self.sift.detectAndCompute(gray,None)
+
+
+class BFMatcher:
+    def __init__(self,model):
+        self.model = model
+        self.matcher = cv2.BFMatcher(cv2.NORM_HAMMING)
+    def bestMatches(self,des,threshold):
+        #reset counts
+        for key in self.model.mod:
+            (kp_model,des_model,points) = self.model.mod[key]
+            self.model.mod[key] = (kp_model, des_model,0)
+
+        for key in self.model.mod:
+            (kp_model,des_model,points) = self.model.mod[key]
+            matches = self.matcher.knnMatch(des,trainDescriptors=des_model,k=2)
+            good = []
+            for (m,n) in matches:
+                if (n.distance == 0):
+                    continue
+                if m.distance <threshold*n.distance:
+                    good.append(m)
+            self.model.mod[key] = (kp_model, des_model, len(good))   
+   
 
 class FlannMatcher:
     def __init__(self, model, FLANN_INDEX_KDTREE = 1, n_trees = 5, n_checks = 50):
@@ -120,14 +147,13 @@ class Detector():
             return sorted_votes[0]
 
 
-feature = SIFTFeature()
-model = Model('model_test1')
-matcher = FlannMatcher(model)
-detector = Detector(feature,matcher,model)
+#feature = SIFTFeature()
+#feature = ORBFeature()
+#model = Model('model_test1')
+#matcher = FlannMatcher(model)
+#matcher = BFMatcher(model)
+#detector = Detector(feature,matcher,model)
 
-detector.train("./database")
-image = cv2.imread("./database/2.jpg")
-print str(detector.run(image))
-
-
-
+#detector.train("./database")
+#image = cv2.imread("./database/2.jpg")
+#print str(detector.run(image))
