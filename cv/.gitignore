@@ -1,3 +1,5 @@
 data
 .*.swp
 keypoints_kmeans.p
+circles
+*.bmp

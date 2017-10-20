@@ -12,6 +12,6 @@ detector.train("./data")
 #image = cv2.imread("./database/2.jpg")
 #print str(detector.run(image))
 
-videoCam = VideoCam()
+videoCam = VideoCam(1)
 videoCam.run(detector)
 

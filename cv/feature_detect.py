@@ -141,6 +141,7 @@ class Detector():
     def run(self,image):
             gray = cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
             kp, des = self.feature.apply(gray)
+            self.current_kp = kp
             self.matcher.bestMatches(des,self.threshold)
             sorted_votes = sorted(self.model.mod.keys(),key=lambda x: self.model.mod[x][2], reverse=True)
             #TODO check if it exists
