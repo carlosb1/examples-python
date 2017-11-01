@@ -6,6 +6,6 @@ client.connect(('0.0.0.0',9999))
 
 client.send('text!')
 #TODO change this for other type of buffer
-response.recv(4096)
+response = client.recv(4096)
 
 print response

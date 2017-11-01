@@ -9,7 +9,7 @@ sock.bind(server_address)
 
 while True:
     print '\n waiting to receive message'
-    data, address = soc.recvfrom(4096)
+    data, address = sock.recvfrom(4096)
 
     print  'received %s bytes from %s' % (len(data), address)
     print  data
