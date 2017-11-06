@@ -11,8 +11,8 @@ db = flask.ext.sqlalchemy.SQLAlchemy(app)
 class News(db.Model):
     id = db.Column(db.Integer,primary_key=True)
     link = db.Column(db.Unicode, unique= True)
-    #received_date = db.Column(db.Date)
-    #analysed_date = db.Column(db.Date)
+    received_date = db.Column(db.DateTime())
+    analysed_date = db.Column(db.DateTime())
     status = db.Column(db.Unicode)
     info = db.Column(db.Unicode)
 

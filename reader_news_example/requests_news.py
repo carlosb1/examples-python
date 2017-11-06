@@ -2,21 +2,17 @@ import json
 import requests
 
 url = 'http://127.0.0.1:5000/api/news'
-headers = {'Accept': 'application/vnd.api+json'}
-post_headers = {'Accept': 'application/vnd.api+json',
-                'Content-Type': 'application/vnd.api+json'}
+headers = {'Accept': 'application/json'}
+post_headers = {'Accept': 'application/json',
+                'Content-Type': 'application/json'}
 
 # Make a POST request to create an object in the database.
 news = {
-    'data': {
-        'type': 'news',
-        'attributes': {
-            'link': 'aaa',
-            'status': 'status!!',
-            'info': 'information'
+        'link': 'aaa',
+        'status': 'status!!',
+        'received_date': "2000-03-12T21:41:43",
+        'info': 'information'
         }
-    }
-}
 response = requests.post(url, data=json.dumps(news), headers=post_headers)
 print response
 assert response.status_code == 201
