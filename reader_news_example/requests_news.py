@@ -9,8 +9,8 @@ post_headers = {'Accept': 'application/json',
 # Make a POST request to create an object in the database.
 news = {
         'link': 'aaa',
-        'status': 'status!!',
-        'received_date': "2000-03-12T21:41:43",
+#        'status': 'status!!',
+#        'received_date': "2000-03-12T21:41:43",
         'info': 'information'
         }
 response = requests.post(url, data=json.dumps(news), headers=post_headers)

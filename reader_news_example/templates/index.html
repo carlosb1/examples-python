@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Contact form example</title>
+    <!-- bootstrap for styling -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+    <!-- see the two script tags right before </body> for Vue and our app code, vue.js -->
+</head>
+<body>
+    <div style="width:50%;" class="container">
+        <h2 class="text-center">Link to analyse</h2>
+        <form id="contact_form"  v-on:submit.prevent="submitForm" action="">
+            <div class="form-group">
+                <label for="name">Link:</label>
+                <input v-model="name" v-on:blur="isValidLink" class="form-control" name="link" type="text" />
+            </div>
+            <button type="submit" class="btn btn-primary">Send</button>
+        </form>
+    </div>
+    
+    <!-- Vue.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.17/vue.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/0.7.0/vue-resource.min.js"></script>
+    <script src="vue.js"></script>
+</body>
+</html>
