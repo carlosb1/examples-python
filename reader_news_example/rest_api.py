@@ -5,13 +5,15 @@ import datetime
 
 import os
 
-template_dir = os.path.abspath("./templates")
-print "folder for templates: ",str(template_dir)
-app = flask.Flask(__name__, static_url_path=template_dir)
+app = flask.Flask(__name__, static_url_path='')
 
 app.config["DEBUG"] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 db = flask.ext.sqlalchemy.SQLAlchemy(app)
+
+@app.route('/')
+def root():
+    return app.send_static_file('index.html')
 
 
 class News(db.Model):
