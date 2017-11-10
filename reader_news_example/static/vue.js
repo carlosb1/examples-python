@@ -13,13 +13,19 @@ new Vue({
         },
         submitForm: function () {
             console.log('submitting message...');
-            this.$http({url: '/someUrl', method: 'POST', data: {
-                link: this.link,
-            }}).then(function () {
-                alert('Your form was submitted!');
-            }, function () {
-                alert('Form submission failed');
-            });
+	    var xhr = new XMLHttpRequest();
+	    var url = "http://localhost:5000/api/news";
+	    xhr.open("POST",url,true);
+	    xhr.setRequestHeader("Content-type", "application/json");
+	    xhr.onreadystatechange = function () {
+		if (xhr.readyState == 4 && xhr.status == 200) {
+			var json = JSON.parse(xhr.responseText);
+			console.log(json);
+
+		}
+	    };
+	    var data = JSON.stringify({"link": this.link});
+	    xhr.send(data);
         }
     }
 });
