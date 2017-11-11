@@ -2,8 +2,9 @@ import flask
 import flask.ext.sqlalchemy
 import flask.ext.restless
 import datetime
-
 import os
+
+from flask import Response
 
 app = flask.Flask(__name__, static_url_path='')
 
@@ -14,6 +15,7 @@ db = flask.ext.sqlalchemy.SQLAlchemy(app)
 @app.route('/')
 def root():
     return app.send_static_file('index.html')
+
 
 
 class News(db.Model):
