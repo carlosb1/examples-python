@@ -12,8 +12,8 @@
         <h2 class="text-center">Link to analyse</h2>
         <form id="contact_form"  v-on:submit.prevent="submitForm" action="">
             <div class="form-group">
-                <label for="name">Link:</label>
-                <input v-model="name" v-on:blur="isValidLink" class="form-control" name="link" type="text" />
+                <label for="link">Link:</label>
+                <input v-model="link" v-on:blur="isValidLink" class="form-control" name="link" type="text" />
             </div>
             <button type="submit" class="btn btn-primary">Send</button>
         </form>

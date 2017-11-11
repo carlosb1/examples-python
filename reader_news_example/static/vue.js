@@ -26,6 +26,7 @@ new Vue({
 	    };
 	    var data = JSON.stringify({"link": this.link});
 	    xhr.send(data);
+
         }
     }
 });
