@@ -90,7 +90,7 @@ var demo = new Vue({
   el: '#demo',
   data: {
     searchQuery: '',
-    gridColumns: ['name', 'power'],
+    gridColumns: ['link', 'Number of words'],
     gridData: [
       { name: 'Chuck Norris', power: Infinity },
       { name: 'Bruce Lee', power: 9000 },

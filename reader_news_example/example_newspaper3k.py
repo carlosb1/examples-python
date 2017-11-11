@@ -5,10 +5,8 @@ list_articles_to_analyse = ["http://www.lavanguardia.com/local/girona/20171108/4
 
 
 class RepositoryArticle:
-
     def __init__(self):
         self.info  = []
-
     def add_article(self,publish_date,title,text,  article, link_image, link_videos, keywords):
         self.info.append([publish_date,title,text,  article, link_image, link_videos, keywords])
 
