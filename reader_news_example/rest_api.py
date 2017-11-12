@@ -25,6 +25,17 @@ class News(db.Model):
     analysed_date = db.Column(db.DateTime())
     status = db.Column(db.Unicode)
     info = db.Column(db.Unicode)
+    publish_date = db.Column(db.DateTime())
+    text = db.Column(db.Unicode)
+    link_image = db.Column(db.Unicode)
+    keywords = db.Column(db.Unicode)
+    videos  = db.Column(db.Unicode)
+    summary = db.Column(db.Unicode)
+    title = db.Column(db.Unicode)
+    
+
+
+
 
 
 db.create_all()
