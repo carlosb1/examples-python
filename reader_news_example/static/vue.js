@@ -25,8 +25,9 @@ var contact_form = new Vue({
 		}
 	    };
 	    var data = JSON.stringify({"link": this.link});
+	    /*clear form */
+	    this.link = '';
 	    xhr.send(data);
-
         }
     }
 });
