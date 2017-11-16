@@ -23,12 +23,14 @@ def save_info(session, url):
     videos = article.movies
     summary = article.summary
     title = article.title
-    
+    print("summary="+summary)
+
     info = session.query(News).filter(News.link==url).one()
     info.status = 'PARSED'
     info.publish_date = publish_date
     info.title = title
     info.text = text
+    info.summary = summary
     info.link_image = json.dumps(link_image)
     info.link_videos = json.dumps(videos)
     info.keywords= json.dumps(keywords)
