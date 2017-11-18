@@ -66,6 +66,7 @@ totalvocab_stemmed = []
 totalvocab_tokenized = []
 
 for i in texts:
+    print i 
     allwords_stemmed = tokenize_and_stem(i)
     totalvocab_stemmed.extend(allwords_stemmed)
 
@@ -75,7 +76,7 @@ for i in texts:
 
 vocab_frame = pd.DataFrame({'words': totalvocab_tokenized}, index=totalvocab_stemmed)
 print 'there are '+str(vocab_frame.shape[0]) + ' items in vocab_frame'
-print vocab_frame.head()
+#print vocab_frame.head()
 
 
 #Apply tfid vectorization
@@ -85,6 +86,8 @@ tfidf_vectorizer = TfidfVectorizer(max_df=0.8, max_features=200000, min_df=0.2, 
 
 tfidf_matrix = tfidf_vectorizer.fit_transform(texts)
 
+print str(tfidf_vectorizer.vocabulary)
+print "------------"
 print tfidf_matrix.shape
 
 
@@ -101,6 +104,8 @@ km = KMeans(n_clusters = num_clusters)
 km.fit(tfidf_matrix)
 clusters = km.labels_.tolist()
 
+
+print clusters
 from sklearn.externals import joblib
 #km = joblib.load('doc_cluster.pkl')
 
