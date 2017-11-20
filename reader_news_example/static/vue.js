@@ -4,7 +4,7 @@ var contact_form = new Vue({
     el: '#contact_form', // id of the 'app'
     data: {
         link: '',   // data for the name on the form
-	news: []
+	news: [],
     },
     methods: { // all the actions our app can do
         isValidLink: function () { // TODO what if name is just spaces?
@@ -14,27 +14,30 @@ var contact_form = new Vue({
         },
         submitForm: function () {
             console.log('submitting message...');
-	    var xhr = new XMLHttpRequest();
-	    var url = "http://localhost:5000/api/news";
-	    xhr.open("POST",url,true);
-	    xhr.setRequestHeader("Content-type", "application/json");
-	    xhr.onreadystatechange = function () {
-		if (xhr.readyState == 4 && xhr.status == 200) {
-			var json = JSON.parse(xhr.responseText);
-			console.log(json);
+	        var xhr = new XMLHttpRequest();
+	        var url = "http://localhost:5000/api/news";
+	        xhr.open("POST",url,true);
+	        xhr.setRequestHeader("Content-type", "application/json");
+	        xhr.onreadystatechange = function () {
+		    if (xhr.readyState == 4 && xhr.status == 200) {
+			    var json = JSON.parse(xhr.responseText);
+			    console.log(json);
 
-		}
-	    };
-	    var data = JSON.stringify({"link": this.link});
-	    /*clear form */
-	    this.link = '';
-	    xhr.send(data);
-        },
-  	function save_to_data(my_grid_data) {
-		this.news = my_grid_data;
-  	},
-       created: function () {
-  	console.log('getting information...');
+		    }
+	        };
+	        var data = JSON.stringify({"link": this.link});
+	        /*clear form */
+	        this.link = '';
+	        xhr.send(data);
+        }
+        
+    },
+
+    created: function () {
+	     save_to_data = function (my_grid_data) {	
+		    this.news = my_grid_data;
+       	     };
+  	    console.log('getting information...');
 	    var xhr = new XMLHttpRequest();
 	    var url = "http://localhost:5000/api/news";
 	    xhr.open("GET",url,true);
@@ -54,6 +57,7 @@ var contact_form = new Vue({
 	    };
 	    xhr.send();
   	}
-    }
+
+
 });
 
