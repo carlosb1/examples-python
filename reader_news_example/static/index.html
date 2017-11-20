@@ -10,24 +10,32 @@
 <body>
     <div style="width:50%;" class="container">
         <h2 class="text-center">Link to analyse</h2>
-        <form id="contact_form"  v-on:submit.prevent="submitForm" action="">
+        <form  id="contact_form" v-on:submit.prevent="submitForm" action="">
             <div class="form-group">
                 <label for="link">Link:</label>
                 <input v-model="link" v-on:blur="isValidLink" class="form-control" name="link" type="text" />
             </div>
             <button type="submit" class="btn btn-primary">Send</button>
         </form>
-
-	<table class="table table-condensed">
+	<!--
+	 <ul id="example-2">
+	  <li v-for="(item, index) in items">
+	   {{ parentMessage }} - {{ index }} - {{ item.message }}
+	  </li>
+	</ul>
+	-->	
+	
+	<table  class="table table-condensed">
 		<thead>
 				<th>Link</th>
 				<th>Title</th>
 		</thead>
-		<tbody> 
-			<tr v-for="new in news">
-				<td>{{new.link}}</td>
-				<td>{{new.title}}</td>
-			</tr>
+		<tbody  id="get-data" > 
+			<tr v-for="(item, index) in items">
+				<td>{{ item.link }}</td>
+				<td>{{ item.title }}</td>
+			</tr> 
+
 		</tbody>
 	</table>
 
