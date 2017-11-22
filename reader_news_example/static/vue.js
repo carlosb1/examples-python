@@ -22,7 +22,6 @@ var contact_form = new Vue({
 					var json = JSON.parse(xhr.responseText);
 					console.log(json);
 				}
-				//vm.$forceUpdate();
 			}.bind(xhr,this);
 			var data = JSON.stringify({"link": this.link});
 			/*clear form */
@@ -40,9 +39,6 @@ var getdata = new Vue({
 		items: []
 	},
 	mounted: function () {
-		this.requestGet();
-	},
-	beforeUpdate: function () {
 		this.requestGet();
 	},
 	methods: {
