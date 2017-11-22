@@ -8,8 +8,9 @@ from flask import Response
 
 app = flask.Flask(__name__, static_url_path='')
 
+DATABASE_URL = os.environ.get('DATABASE_URL','sqlite:///test.db')
 app.config["DEBUG"] = True
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL 
 db = flask.ext.sqlalchemy.SQLAlchemy(app)
 
 @app.route('/')
@@ -37,12 +38,12 @@ class News(db.Model):
 
 
 
-
-db.create_all()
-
-manager = flask.ext.restless.APIManager(app, flask_sqlalchemy_db=db)
-manager.create_api(News,methods=['GET','POST','DELETE'])
-app.run()
+if __name__ == '__main__':
+    db.create_all()
+    port = int(os.environ.get('PORT',5000))
+    manager = flask.ext.restless.APIManager(app, flask_sqlalchemy_db=db)
+    manager.create_api(News,methods=['GET','POST','DELETE'])
+    app.run(host='0.0.0.0', port = port)
 
 
 
