@@ -44,7 +44,7 @@ ssl_sock = ssl_ctx.wrap_socket(s,server_hostname=dn)
 ssl_sock.connect(ip_and_port)
 assert('h2' == ssl_sock.selected_alpn_protocol())
 
-
+####
 import scapy.supersocket as supersocket
 import scapy.contrib.http2 as h2
 import scapy.config
@@ -53,5 +53,33 @@ scapy.config.conf.debug_dissector = True
 ss = supersocket.SSLStreamSocket(ssl_sock, basecls=h2.H2Frame)
 srv_set = ss.recv()
 srv_set.show()
+
+####
+
+srv_max_frm_sz = 1 << 14
+srv_hdr_tbl_sz =  4096
+srv_max_hdr_tbl_sz = 0
+srv_global_window = 1<<14
+
+for setting in srv_set.payload.settings:
+    if setting.id   == h2.H2Setting.SETTINGS_HEADER_TABLE_SIZE:
+        srv_hdr_tbl_sz = setting.value
+    elif setting.id == h2.H2Setting.SETTINGS_MAX_HEADER_LIST_SIZE:
+        srv_max_hdr_tbl_sz = setting.value
+    elif setting.id == h2.H2Setting.SETTINGS_INITIAL_WINDOW_SIZE:
+        srv_global_window = setting.value
+
+####
+
+import scapy.packet as packet
+srv_global_window -=len(h2.H2_CLIENT_CONNECTION_PREFACE)
+assert(srv_global_window >=0)
+print ss.send(packet.Raw(h2.H2_CLIENT_CONNECTION_PREFACE))
+
+####
+
+set_ack = h2.H2Frame(flags={'A'}) / h2.H2SettingsFrame()
+set_ack.show()
+
 
 
