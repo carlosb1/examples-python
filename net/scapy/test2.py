@@ -64,3 +64,41 @@ print pkt.summary()
 hexdump(pkt)
 pkt.show()
 pkt.canvas_dump()
+
+ans, unans = traceroute('www.secdev.org',maxttl=15)
+
+ans.world_trace()
+
+ans = sr(IP(dst=["scanme.nmap.org","nmap.org"])/TCP(dport=[22,80,443,31337]), timeout=3, verbose=False)[0]
+
+ans.extend(sr(IP(dst=["scanme.nmap.org","nmap.org"])/UDP(dport=53)/DNS(qd=DNSQR()), timeout=3, verbose=False)[0])
+ans.make_table(lambda (x,y): (x[IP].dst, x.sprintf('%IP.proto%/{TCP:%r,TCP.dport%}{UDP:%r, UDP.dport%}'), y.sprintf('{TCP:%TCP.flags%{ICMP:%ICMP.type%}}')))
+
+
+#Implement new protocol
+
+class DNSTCP(Packet):
+    name = "DNS over TCP"
+
+    field_desc = [FieldLenField("len", None, fmt="!H", length_of="dns")
+            , PacketLenField("dns", 0 , DNS, length_from=lambda p: p.len)]
+
+
+    def guess_payload_class(self,payload):
+        return DNSTCP
+
+
+DNSTCP(str(DNSTCP(dns=DNS())))
+
+import socket
+sck  = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sck.connect(("8.8.8.8",53))
+ssck = StreamSocket(sck)
+
+ssck.basecls = DNSTCP
+ssck.sr1(DNSTCP(dns=DNS(rd=1, qd=DNSQR(qname="www.example.com"))))
+
+
+
+
+
