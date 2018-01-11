@@ -1,8 +1,6 @@
-import sqlite3
 from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy import create_engine, exists
 
-import newspaper
 from newspaper import Article
 from news import News
 
@@ -25,7 +23,7 @@ def save_info(session, url):
     title = article.title
     print("summary="+summary)
 
-    info = session.query(News).filter(News.link==url).one()
+    info = session.query(News).filter(News.link == url).one()
     info.status = 'PARSED'
     info.publish_date = publish_date
     info.title = title
@@ -33,7 +31,7 @@ def save_info(session, url):
     info.summary = summary
     info.link_image = json.dumps(link_image)
     info.link_videos = json.dumps(videos)
-    info.keywords= json.dumps(keywords)
+    info.keywords = json.dumps(keywords)
     session.flush()
     session.commit()
 
@@ -49,7 +47,7 @@ def update(database_name='sqlite:///test.db'):
     loop = asyncio.get_event_loop()
     tasks = []
     for new in news:
-        tasks.append(save_info(session,new.link))
+        tasks.append(save_info(session, new.link))
     
     loop.run_until_complete(asyncio.wait(tasks))
     loop.close()
