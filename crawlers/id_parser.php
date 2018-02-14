@@ -29,7 +29,7 @@ function instagram_id_to_url($instagram_id){
 }
 
 // example
-$insta_id = "1713824582791575576";
+$insta_id = "17906666317081866";
 echo instagram_id_to_url($insta_id);
 echo "\n";
 ?>
