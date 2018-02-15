@@ -121,6 +121,7 @@ while ans:
         exit(0)
     try:
         ans = int(ans) - 1
+        all_info_locations = []
         if ans in range(len(bot.LastJson["items"])):
                 #import json
                 #print(json.dumps(bot.LastJson["items"]))
@@ -128,8 +129,10 @@ while ans:
                 #print(str(bot.LastJson["items"][ans]))
                 print("#######################")
 
-                texts_from_locations = get_media_id_with_location_and_tags(bot,bot.LastJson["items"][ans],args.tags)
-
+                info_locations = get_media_id_with_location_and_tags(bot,bot.LastJson["items"][ans],args.tags)
+                all_info_locations.append(info_location)
+        
+        print(str(all_info_locations))
     except ValueError:
         print(u"\n Not valid choice. Try again")
 
