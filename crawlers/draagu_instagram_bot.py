@@ -13,20 +13,33 @@ try:
 except NameError:
     pass
 
+
+def extract_media_id_comment(json_info, location_feed):
+    json_data = json.loads(location_feed)
+    result_texts = [];
+    for item in json_data['ranked_items']:
+        text = ['caption']['text']
+        media_id = ['caption']['media_id']
+        result_texts.append([text,media_id])
+    
+
+
 def get_media_id_with_location_and_tags(new_bot, new_location, tags):
     media_ids = []
     max_id=''
+    texts_from_location = [];
     if new_bot.getLocationFeed(new_location['location']['pk'], maxid=max_id):
         location_feed = new_bot.LastJson
-        import json
-        strJson =json.dumps(location_feed)
-        print(strJson)
-        import datetime, time
-        st = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
-        fil = open('dump'+st+'.json','w')
-        fil.write(strJson)
-        fil.close()
-        print("------------------------")
+        text_from_location = extract_media_id_comment(location_feed)
+        #import json
+        #strJson =json.dumps(location_feed)
+        #print(strJson)
+        #import datetime, time
+        #st = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
+        #fil = open('dump'+st+'.json','w')
+        #fil.write(strJson)
+        #fil.close()
+        #print("------------------------")
         #for media in new_bot.filter_medias(location_feed["items"][:amount], quiet=True):
         #    print(str(media))
             #if bot.comment(media, MESSAGE):
@@ -36,7 +49,7 @@ def get_media_id_with_location_and_tags(new_bot, new_location, tags):
        #         return False
        #     max_id = location_feed['next_max_id']
             
-    return media_ids
+    return texts_from_location
 
 def comment_location_feed(new_bot, new_location, amount=0):
     counter = 0
@@ -115,7 +128,8 @@ while ans:
                 #print(str(bot.LastJson["items"][ans]))
                 print("#######################")
 
-                get_media_id_with_location_and_tags(bot,bot.LastJson["items"][ans],args.tags)
+                texts_from_locations = get_media_id_with_location_and_tags(bot,bot.LastJson["items"][ans],args.tags)
+
     except ValueError:
         print(u"\n Not valid choice. Try again")
 
