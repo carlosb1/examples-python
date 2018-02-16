@@ -14,23 +14,31 @@ except NameError:
     pass
 
 
-def extract_media_id_comment(json_info, location_feed):
-    json_data = json.loads(location_feed)
+def extract_media_id_comment(location_feed):
+    strJson = json.dumps(location_feed)
+    json_data = json.loads(strJson)
     result_texts = [];
     for item in json_data['ranked_items']:
-        text = ['caption']['text']
-        media_id = ['caption']['media_id']
+        text = item['caption']['text']
+        media_id = item['caption']['media_id']
         result_texts.append([text,media_id])
+    return result_texts
     
 
 
 def get_media_id_with_location_and_tags(new_bot, new_location, tags):
     media_ids = []
     max_id=''
-    texts_from_location = [];
+    texts_from_location = []
     if new_bot.getLocationFeed(new_location['location']['pk'], maxid=max_id):
         location_feed = new_bot.LastJson
         text_from_location = extract_media_id_comment(location_feed)
+        texts_from_location.extend(text_from_location)
+        
+        amount = 100
+        for media in new_bot.filter_medias(location_feed["items"][:amount], quiet=True):
+            print(str(media))
+        
         #import json
         #strJson =json.dumps(location_feed)
         #print(strJson)
@@ -130,10 +138,16 @@ while ans:
                 print("#######################")
 
                 info_locations = get_media_id_with_location_and_tags(bot,bot.LastJson["items"][ans],args.tags)
-                all_info_locations.append(info_location)
-        
-        print(str(all_info_locations))
-    except ValueError:
-        print(u"\n Not valid choice. Try again")
+                all_info_locations.extend(info_locations)
+     
+
+        #for info in all_info_locations:
+            #print(str(info))
+        #    print(str(info[0].encode('utf-8')))
+        #    print(str(info[1]))
+        #    print("----------------------_")
+        #print("\n".join([str(info) for info in all_info_locations]))
+    except ValueError as  e:
+        print(u"\n Not valid choice. Try again: "+str(e))
 
 
