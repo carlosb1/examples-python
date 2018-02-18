@@ -4,6 +4,8 @@ import argparse
 import os
 import sys
 import json
+from time import sleep
+from random import randint
 
 sys.path.append(os.path.join(sys.path[0], '../'))
 from instabot import Bot
@@ -22,6 +24,7 @@ def extract_media_id_comment(location_feed):
         text = item['caption']['text']
         media_id = item['caption']['media_id']
         result_texts.append([text,media_id])
+    bot.searchLocation(location_name)
     return result_texts
     
 
@@ -34,10 +37,10 @@ def get_media_id_with_location_and_tags(new_bot, new_location, tags):
         location_feed = new_bot.LastJson
         text_from_location = extract_media_id_comment(location_feed)
         texts_from_location.extend(text_from_location)
-        
-        amount = 100
-        for media in new_bot.filter_medias(location_feed["items"][:amount], quiet=True):
-            print(str(media))
+       
+        #amount = 100
+        #for media in new_bot.filter_medias(location_feed["items"], quiet=True):
+        #    print(str(media))
         
         #import json
         #strJson =json.dumps(location_feed)
@@ -106,19 +109,34 @@ if not args.tags or len(args.tags)==0:
 
 location_name = input(u"Write location name:\n").strip()
 
-print("msg:"+message)
-print("tags:"+str(args.tags))
-print("location:"+location_name)
-
 
 bot.searchLocation(location_name)
 
 if not bot.LastJson['items']:
     exit(1)
 
-ncomments =  input(u"How much comments per location?\n")
-ans = True
+ncomments =  int(input(u"How much comments do you want to add?\n"))
 
+if not isinstance(ncomments,int) or ncomments <= 0 :
+    print("It is necessary add a positive number")
+    exit(1)
+
+
+print("msg:"+message)
+print("tags:"+str(args.tags))
+print("location:"+location_name)
+
+
+
+
+def contains_media(list, filter):
+    for x in list:
+        if filter(x):
+            return True
+    return False
+
+
+ans = True
 media_ids=[]
 while ans:
     for n, location in enumerate(bot.LastJson["items"], start=1):
@@ -131,22 +149,21 @@ while ans:
         ans = int(ans) - 1
         all_info_locations = []
         if ans in range(len(bot.LastJson["items"])):
-                #import json
-                #print(json.dumps(bot.LastJson["items"]))
-                #print("---------------------")
-                #print(str(bot.LastJson["items"][ans]))
-                print("#######################")
-
+            while len(all_info_locations) < ncomments:
                 info_locations = get_media_id_with_location_and_tags(bot,bot.LastJson["items"][ans],args.tags)
-                all_info_locations.extend(info_locations)
-     
+                for info in all_info_locations:
+                    print(str(info[0].encode('utf-8')))
+                    print(str(info[1]))
 
-        #for info in all_info_locations:
-            #print(str(info))
-        #    print(str(info[0].encode('utf-8')))
-        #    print(str(info[1]))
-        #    print("----------------------_")
-        #print("\n".join([str(info) for info in all_info_locations]))
+                locations_to_add = [location for location in info_locations if not contains_media(all_info_locations, location[1])] 
+                all_info_locations.extend(locations_to_add)
+                pending = ncomments - len(locations_to_add)
+                print("Pending to find %d, waiting for next search" %(pending)) 
+                sleep(randint(1,3)) 
+        
+        print("----------------------_")
+        print("\n".join([str(info) for info in all_info_locations]))
+
     except ValueError as  e:
         print(u"\n Not valid choice. Try again: "+str(e))
 
