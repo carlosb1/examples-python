@@ -62,7 +62,8 @@ def get_talk(title, body, authors, twitter_links, avatar_links, slot_time="9:00 
 import bs4
 if __name__ == '__main__':
     template_file = 'template_schedule.html'
-
+    new_name_file = 'result.html'
+    
     with open(template_file) as f:
         txt = f.read()
         soup = bs4.BeautifulSoup(txt)
@@ -199,6 +200,6 @@ if __name__ == '__main__':
         
         day2_track4 = soup.find('div', id='tab-lv22-third').find('div', class_='timeline')
         [day2_track4.append(talk) for talk in talks_day2_track4]
-
-    
         
+        with open(new_name_file, 'w') as outf:
+            outf.write(str(soup))
