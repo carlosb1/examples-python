@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+        redis:
+                image: redis:4.0.6-alpine
+                ports:
+                  - "6379:6379"
+                volumes:
+                  - ./redis:/data
+        flask_news_api:
+                image: flask_news:latest
+                command: uvicorn api:app --host 0.0.0.0 --port 5057
+                ports:
+                 - "5057:5057"
+                links:
+                 - redis
+        flask_news_worker:
+                image: flask_news:latest
+                command: rq worker --url redis://redis:6379 my_queue
+                depends_on:
+                        - redis
+                links:
+                        - redis

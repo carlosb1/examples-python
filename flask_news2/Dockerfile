@@ -9,6 +9,7 @@ COPY requirements.txt requirements.txt
 
 RUN pip install -r requirements.txt
 COPY api.py ./
+COPY worker.py ./
 
 RUN chown -R flask_news:flask_news ./
 USER flask_news
