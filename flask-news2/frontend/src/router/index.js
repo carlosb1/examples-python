@@ -1,22 +1,30 @@
+/* eslint-disable */
 import Vue from 'vue';
 import Router from 'vue-router';
-import Ping from '@/components/Ping';
-import Books from '@/components/Books';
-
-Vue.use(Router);
-
-export default new Router({
-  routes: [
+const routerOptions = [
     {
       path: '/',
-      name: 'Books',
-      component: Books,
+      component: 'Books'
     },
     {
       path: '/ping',
-      name: 'Ping',
-      component: Ping,
+      component: 'Ping'
     },
-  ],
-  mode: 'hash',
-});
+    {
+      path: '/add',
+      component: 'Add'
+    },
+    { path: '*', component: 'NotFound' }
+ ]
+
+const routes = routerOptions.map(route => {
+  return {
+    ...route,
+    component: () => import(`@/components/${route.component}.vue`)
+  }
+})
+Vue.use(Router)
+export default new Router({
+  routes,
+  mode: 'history'
+})
