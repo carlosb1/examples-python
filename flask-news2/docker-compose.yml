@@ -21,6 +21,7 @@ services:
                  - "5057:5057"
                 links:
                  - redis
+                 - mongodb
         flask_news_worker:
                 image: flask_news:latest
                 command: rq worker --url redis://redis:6379 my_queue
@@ -28,3 +29,11 @@ services:
                         - redis
                 links:
                         - redis
+        mongodb:
+                image: mongo:latest
+                ports:
+                        - 27017:27017
+                environment:
+                        MONGODB_USER: mongodb
+                        MONGODB_PASS: mongodb
+                        
