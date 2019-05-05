@@ -2,20 +2,20 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 const routerOptions = [
-    {
-      path: '/',
-      component: 'Books'
-    },
-    {
-      path: '/ping',
-      component: 'Ping'
-    },
-    {
-      path: '/add',
-      component: 'Add'
-    },
-    { path: '*', component: 'NotFound' }
- ]
+  {
+    path: '/',
+    component: 'Books'
+  },
+  {
+    path: '/ping',
+    component: 'Ping'
+  },
+  {
+    path: '/add',
+    component: 'Add'
+  },
+  { path: '*', component: 'NotFound' }
+]
 
 const routes = routerOptions.map(route => {
   return {

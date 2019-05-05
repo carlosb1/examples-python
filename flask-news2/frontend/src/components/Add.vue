@@ -39,10 +39,10 @@ export default {
     addURL: function() {
       this.URLs = [];
       this.URLs.push(this.currentURL);
-      const path = "http://0.0.0.0:5002/api/news";
+      const path = "http://0.0.0.0:5057/news";
       axios
         .post(path, {
-          urls: this.URLs
+          elems: this.URLs
         })
         .then(response => {
           this.currentURL = "";
