@@ -4,6 +4,10 @@ import Router from 'vue-router';
 const routerOptions = [
   {
     path: '/',
+    component: 'Home'
+  },
+  {
+    path: '/books',
     component: 'Books'
   },
   {
@@ -13,6 +17,14 @@ const routerOptions = [
   {
     path: '/add',
     component: 'Add'
+  },
+  {
+    path: '/home',
+    component: 'Home'
+  },
+  {
+    path: '/top',
+    component: 'Top'
   },
   { path: '*', component: 'NotFound' }
 ]
