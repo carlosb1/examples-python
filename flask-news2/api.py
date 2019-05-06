@@ -44,10 +44,16 @@ class Links(BaseModel):
 def addNews(links: Links):
     for link in links.elems:
         LOGGER.info(str(link))
-        # import ipdb
-        # ipdb.set_trace()
         q.enqueue(runAnalysis, link, host_mongodb)
     return {"job": "Ok"}
+
+
+@app.get('/news')
+def getNews():
+    from db import get_collection
+    news = get_collection(host_mongodb)
+    elems = [str(elem) for elem in news.find()]
+    return {"result": elems}
 
 
 # test services
