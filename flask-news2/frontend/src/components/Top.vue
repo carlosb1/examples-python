@@ -1,6 +1,38 @@
 <template>
   <div>
     <div class="container">
+      <div>
+        <br>
+        <h5>Add new link</h5>
+        <hr>
+        <br>
+        <b-btn href="#" v-b-toggle.accordion_add_url variant="primary">Add URL</b-btn>
+        <b-collapse id="accordion_add_url" role="tabpanel">
+          <!-- some content -->
+          <div class="input-group p-4 row">
+            <div class="col-10">
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="basic-addon3">URL:</span>
+                </div>
+                <input
+                  v-model="currentURL"
+                  type="text"
+                  class="form-control"
+                  id="basic-url"
+                  aria-describedby="basic-addon3"
+                >
+              </div>
+            </div>
+            <div class="col-2">
+              <span class="input-group-btn">
+                <button class="btn btn-primary" type="button" v-on:click="addURL()">add!!</button>
+              </span>
+            </div>
+          </div>
+        </b-collapse>
+      </div>
+
       <div v-if="results">
         <hr>
         <div class="msg-group p-2" v-for="elem in results">
@@ -24,7 +56,7 @@ import axios from "axios";
 export default {
   data() {
     return {
-      currentTags: "",
+      currentURL: "",
       results: [
         { top: "top1", title: "title1", text: "text1" },
         { top: "top2", title: "title2", text: "text2" },
@@ -34,18 +66,38 @@ export default {
   },
 
   methods: {
-    search() {
+    get() {
       const path = "http://0.0.0.0:5057/news";
-      axios.defaults.headers.post["Content-Type"] =
-        "application/json;charset=utf-8";
-      axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
       axios
         .get(path, { params: { tags: this.currentTags.split(" ") } })
         .then(response => {
+          // TODO ADD PARSER
           this.results = response.data["result"];
         })
         .catch(error => {
           console.log(error);
+        });
+    },
+    search() {
+      const path = "http://0.0.0.0:5057/news/search";
+      axios
+        .get(path, { params: { tags: this.currentTags.split(" ") } })
+        .then(response => {
+          // TODO ADD SEARCH
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    addURL() {
+      const path = "http://0.0.0.0:5057/urls";
+      axios
+        .post(path)
+        .then(() => {
+          //TODO add urls
+        })
+        .catch(error => {
+          //TODO add errors
         });
     }
   }

@@ -4,11 +4,11 @@ import Router from 'vue-router';
 const routerOptions = [
   {
     path: '/',
-    component: 'Home'
+    component: 'Top'
   },
   {
-    path: '/books',
-    component: 'Books'
+    path: '/feeds',
+    component: 'Feeds'
   },
   {
     path: '/ping',
@@ -17,10 +17,6 @@ const routerOptions = [
   {
     path: '/add',
     component: 'Add'
-  },
-  {
-    path: '/home',
-    component: 'Home'
   },
   {
     path: '/top',
