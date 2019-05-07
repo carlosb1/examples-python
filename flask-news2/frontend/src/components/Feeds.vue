@@ -95,12 +95,7 @@ export default {
   },
   methods: {
     getFeeds() {
-      this.feeds = [
-        { url: "my_url1", item_id: "1x" },
-        { url: "my_url2", item_id: "2x" }
-      ];
-      /*
-      const path = httpEndpoint;
+      const path = this.httpEndpoint;
       axios
         .get(path)
         .then(res => {
@@ -110,11 +105,9 @@ export default {
           // eslint-disable-next-line
           console.error(error);
         });
-        */
     },
     addFeed(payload) {
-      /*
-      const path = httpEndpoint;
+      const path = this.httpEndpoint;
       axios
         .post(path, payload)
         .then(() => {
@@ -127,11 +120,8 @@ export default {
           console.error(error);
           this.getFeeds();
         });
-      */
-      this.getFeeds();
     },
     updateFeed(payload, feedID) {
-      /*
       const path = `${this.httpEndpoint}/${feedID}`;
       axios
         .put(path, payload)
@@ -144,11 +134,9 @@ export default {
           // eslint-disable-next-line
           console.error(error);
           this.getFeeds();
-        }); */
-      this.getFeeds();
+        });
     },
     removeFeed(feedID) {
-      /*
       const path = `${this.httpEndpoint}/${feedID}`;
       axios
         .delete(path)
@@ -162,8 +150,6 @@ export default {
           console.error(error);
           this.getFeeds();
         });
-        */
-      this.getFeeds();
     },
     initForm() {
       this.addFeedForm.url = "";
@@ -173,10 +159,8 @@ export default {
     onSubmit(evt) {
       evt.preventDefault();
       this.$refs.addFeedModal.hide();
-      let read = false;
-      if (this.addFeedForm.read[0]) read = true;
       const payload = {
-        feeds: [this.addFeedForm.title]
+        feeds: [this.addFeedForm.url]
       };
       this.addFeed(payload);
       this.initForm();

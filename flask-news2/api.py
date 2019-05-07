@@ -1,14 +1,6 @@
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
-import logging
-
-LOGGER = logging.getLogger("uvicorn")
-
-import os
-host_redis = os.getenv('HOST_REDIS', 'redis')
-host_mongodb = os.getenv('HOST_MONGODB', '0.0.0.0')
-
 app = FastAPI()
 
 # CORS configuration
@@ -19,5 +11,7 @@ app.add_middleware(CORSMiddleware,
                    allow_methods=["*"],
                    allow_headers=["*"])
 
-from routers import news
+from routers import news, urls, feeds
 app.include_router(news.router)
+app.include_router(urls.router)
+app.include_router(feeds.router)
