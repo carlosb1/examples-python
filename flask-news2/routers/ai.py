@@ -14,5 +14,4 @@ def runAnalysis(link: str, host_mongodb: str):
     if not news.find_one({'link': link}):
         news.insert_one({'link': link, "status": "PENDING"})
         # TODO Apply ray
-
     LOGGER.debug("Working with this link: " + link)

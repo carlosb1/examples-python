@@ -1,14 +1,7 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-from redis import Redis
-from rq import Queue
 
 import logging
-from typing import List
-
-from worker import runTask
-from ai import runAnalysis
 
 LOGGER = logging.getLogger("uvicorn")
 
@@ -26,52 +19,5 @@ app.add_middleware(CORSMiddleware,
                    allow_methods=["*"],
                    allow_headers=["*"])
 
-# Configure queue
-redis_conn = Redis(host=host_redis, port=6379, db=0)
-q = Queue('my_queue', connection=redis_conn)
-
-# DTO instances
-
-
-class Links(BaseModel):
-    elems: List[str]
-
-
-# TODO option to add tags
-
-
-@app.post('/news', status_code=201)
-def addNews(links: Links):
-    for link in links.elems:
-        LOGGER.info(str(link))
-        q.enqueue(runAnalysis, link, host_mongodb)
-    return {"job": "Ok"}
-
-
-@app.get('/news')
-def getNews():
-    from db import get_collection
-    news = get_collection(host_mongodb)
-    elems = [str(elem) for elem in news.find()]
-    return {"result": elems}
-
-
-# test services
-
-
-class Group(BaseModel):
-    owner: str
-    description: str = None
-
-
-@app.get('/hello')
-def hello():
-    return {'hello': 'world'}
-
-
-@app.post('/groups/{group_name}', status_code=201)
-def addTask(group_name: str, group: Group):
-    if group_name not in ('group1', 'group2'):
-        raise HTTPException(status_code=404, detail='Group not found')
-    q.enqueue(runTask, group_name, group.owner, group.description)
-    return {'job': "Ok"}
+from routers import news
+app.include_router(news.router)
