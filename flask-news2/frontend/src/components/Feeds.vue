@@ -13,12 +13,12 @@
         <table class="table table-hover">
           <thead>
             <tr>
-              <th scope="col">Title</th>
+              <th scope="col">URL</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(feed, index) in feeds" :key="index">
-              <td>{{ feed.title }}</td>
+              <td>{{ feed.url }}</td>
               <td>
                 <button
                   type="button"
@@ -43,9 +43,9 @@
           <b-form-input
             id="form-title-input"
             type="text"
-            v-model="addFeedForm.title"
+            v-model="addFeedForm.url"
             required
-            placeholder="Enter title"
+            placeholder="Enter URL"
           ></b-form-input>
         </b-form-group>
         <b-button type="submit" variant="primary">Submit</b-button>
@@ -58,9 +58,9 @@
           <b-form-input
             id="form-title-edit-input"
             type="text"
-            v-model="editForm.title"
+            v-model="editForm.url"
             required
-            placeholder="Enter title"
+            placeholder="Enter URL"
           ></b-form-input>
         </b-form-group>
         <b-button type="submit" variant="primary">Update</b-button>
@@ -79,15 +79,11 @@ export default {
     return {
       feeds: [],
       addFeedForm: {
-        title: "",
-        author: "",
-        read: []
+        url: ""
       },
       editForm: {
-        id: "",
-        title: "",
-        author: "",
-        read: []
+        item_id: "",
+        url: ""
       },
       message: "",
       showMessage: false,
@@ -99,6 +95,11 @@ export default {
   },
   methods: {
     getFeeds() {
+      this.feeds = [
+        { url: "my_url1", item_id: "1x" },
+        { url: "my_url2", item_id: "2x" }
+      ];
+      /*
       const path = httpEndpoint;
       axios
         .get(path)
@@ -109,8 +110,10 @@ export default {
           // eslint-disable-next-line
           console.error(error);
         });
+        */
     },
     addFeed(payload) {
+      /*
       const path = httpEndpoint;
       axios
         .post(path, payload)
@@ -124,8 +127,11 @@ export default {
           console.error(error);
           this.getFeeds();
         });
+      */
+      this.getFeeds();
     },
     updateFeed(payload, feedID) {
+      /*
       const path = `${this.httpEndpoint}/${feedID}`;
       axios
         .put(path, payload)
@@ -138,9 +144,11 @@ export default {
           // eslint-disable-next-line
           console.error(error);
           this.getFeeds();
-        });
+        }); */
+      this.getFeeds();
     },
     removeFeed(feedID) {
+      /*
       const path = `${this.httpEndpoint}/${feedID}`;
       axios
         .delete(path)
@@ -154,11 +162,13 @@ export default {
           console.error(error);
           this.getFeeds();
         });
+        */
+      this.getFeeds();
     },
     initForm() {
-      this.addFeedForm.title = "";
-      this.editForm.id = "";
-      this.editForm.title = "";
+      this.addFeedForm.url = "";
+      this.editForm.item_id = "";
+      this.editForm.url = "";
     },
     onSubmit(evt) {
       evt.preventDefault();
@@ -166,7 +176,7 @@ export default {
       let read = false;
       if (this.addFeedForm.read[0]) read = true;
       const payload = {
-        title: this.addFeedForm.title
+        feeds: [this.addFeedForm.title]
       };
       this.addFeed(payload);
       this.initForm();
@@ -177,9 +187,9 @@ export default {
       let read = false;
       if (this.editForm.read[0]) read = true;
       const payload = {
-        title: this.editForm.title
+        feeds: [this.editForm.url]
       };
-      this.updateFeed(payload, this.editForm.id);
+      this.updateFeed(payload, this.editForm.item_id);
     },
     onReset(evt) {
       evt.preventDefault();
@@ -193,7 +203,7 @@ export default {
       this.getFeeds(); // why?
     },
     onDeleteFeed(feed) {
-      this.removeFeed(feed.id);
+      this.removeFeed(feed.item_id);
     },
     editFeed(feed) {
       this.editForm = feed;
