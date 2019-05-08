@@ -43,7 +43,7 @@ def addNews(links: Links):
 def getNews():
     news = get_collection(host_mongodb)
     result = []
-    for elem in news.find():
+    for elem in news.find()[0:20]:
         new_elem = elem
         elem["elem_id"] = str(elem["_id"])
         del elem["_id"]

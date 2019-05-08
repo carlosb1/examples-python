@@ -37,11 +37,11 @@
         <hr>
         <div class="msg-group p-2" v-for="elem in results">
           <div class="card">
-            <div class="card-header">{{ elem.top }}</div>
+            <div class="card-header">{{ elem.title }}</div>
             <div class="card-body">
               <h5 class="card-title">{{ elem.title }}</h5>
-              <p class="card-text">{{ elem.text}}</p>
-              <a href="#" class="btn btn-primary">More information</a>
+              <p class="card-text">{{ elem.summary}}</p>
+	      <a v-bind:href="elem.url" class="btn btn-primary">More information</a>
             </div>
           </div>
         </div>
@@ -58,18 +58,18 @@ export default {
     return {
       currentURL: "",
       results: [
-        { top: "top1", title: "title1", text: "text1" },
-        { top: "top2", title: "title2", text: "text2" },
-        { top: "top3", title: "title3", text: "text3" }
       ]
     };
   },
+  created() {
+     	this.get();
+  },    
 
   methods: {
     get() {
       const path = "http://0.0.0.0:5057/news";
       axios
-        .get(path, { params: { tags: this.currentTags.split(" ") } })
+        .get(path)
         .then(response => {
           // TODO ADD PARSER
           this.results = response.data["result"];
@@ -81,7 +81,7 @@ export default {
     search() {
       const path = "http://0.0.0.0:5057/news/search";
       axios
-        .get(path, { params: { tags: this.currentTags.split(" ") } })
+        .get(path)
         .then(response => {
           // TODO ADD SEARCH
         })
