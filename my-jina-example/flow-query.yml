@@ -1,0 +1,24 @@
+!Flow
+with:
+  read_only: true
+  port_expose: 65481
+pods:
+  splittor:
+    uses: pods/craft-split.yml
+    parallel: 1
+    read_only: true
+  encoder:
+    uses: pods/encode.yml
+    parallel: 1
+    timeout_ready: 60000
+    read_only: true
+  chunk_indexer:
+    uses: pods/index-chunk.yml
+    shards: 1
+    separated_workspace: true
+    polling: all
+    reducing_uses: _merge_all
+  ranker:
+    uses: MinRanker
+  doc_indexer:
+    uses: pods/index-doc.yml

@@ -1,0 +1,24 @@
+!Flow
+pods:
+  reader:
+    uses: pods/extract.yml
+  splittor:
+    uses: pods/craft-split.yml
+    parallel: 1
+    read_only: true
+  encoder:
+    uses: pods/encode.yml
+    parallel: 1
+    timeout_ready: 1200000
+    read_only: true
+  chunk_indexer:
+    uses: pods/index-chunk.yml
+    shards: 1
+    separated_workspace: true
+  doc_indexer:
+    uses: pods/index-doc.yml
+    needs: reader
+  join_all:
+    uses: _merge
+    needs: [doc_indexer, chunk_indexer]
+    read_only: true
