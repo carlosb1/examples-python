@@ -26,4 +26,4 @@ traitlets==4.3.2
 uvicorn==0.7.0
 uvloop==0.12.2
 wcwidth==0.1.7
-websockets==7.0
+websockets==9.1
