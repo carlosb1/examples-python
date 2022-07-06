@@ -35,7 +35,7 @@ itsdangerous==0.24
 jieba==0.35
 Jinja2==2.10
 lockfile==0.12.2
-lxml==3.3.5
+lxml==4.9.1
 Mako==1.0.3
 MarkupSafe==0.23
 matplotlib==2.1.0
