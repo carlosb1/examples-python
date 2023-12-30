@@ -18,13 +18,18 @@ def larger(compare_hand, hand):
     if compare_score < hand_score:
         return True
     elif compare_score == hand_score:
-
-        siz_score = len(hand[1])
-        for ind_score in range(0, siz_score):
-            compare_label = compare_hand[1][ind_score][1]
-            label = hand[1][ind_score][1]
+        for ind in range(0,5):
+            compare_label = compare_hand[0][ind]
+            label = hand[0][ind]
             if label != compare_label:
                 return  LABELS.index(compare_label) < LABELS.index(label)
+
+#        siz_score = len(hand[1])
+#        for ind_score in range(0, siz_score):
+#            compare_label = compare_hand[1][ind_score][1]
+#            label = hand[1][ind_score][1]
+#            if label != compare_label:
+#                return  LABELS.index(compare_label) < LABELS.index(label)
 
     return False
 
@@ -69,4 +74,4 @@ for (ind,hand) in enumerate(hands):
     score = (bid*rank)
     print(f'{hand} score={score} rank={rank} bid={bid}')
     scores +=  score
-print(scores)
+    print(scores)
