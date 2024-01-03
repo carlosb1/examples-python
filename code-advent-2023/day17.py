@@ -115,6 +115,7 @@ available_paths = []
 initial_path = [position]
 heapq.heappush(available_paths, (matrix.height(initial_path), initial_path))
 
+visited = []
 while available_paths:
     (new_height, path) = heapq.heappop(available_paths)
     last_position = path[-1]
@@ -122,11 +123,14 @@ while available_paths:
         matrix.add_solution(path)
     else:
         #if path keep being a smaller heat that the current solution, if not, discard the solution_height
-        if matrix.solution_height() > new_height:
+        if matrix.solution_height() > new_height and path not in visited:
+            visited.append(path)
+            print(matrix.draw(path))
+            print("/////////////")
             for new_path in generate_possible_new_positions(matrix, path):
                 heapq.heappush(available_paths, (matrix.height(new_path), new_path))
     #print(matrix)
-    # print("/////////////")
+    #print("/////////////")
     # print(matrix.draw(path))
     #print_paths(available_paths)
     # input()
