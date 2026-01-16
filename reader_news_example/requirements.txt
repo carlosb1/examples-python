@@ -36,7 +36,7 @@ jieba==0.35
 Jinja2==2.10
 lockfile==0.12.2
 lxml==3.3.5
-Mako==1.0.3
+Mako==1.2.2
 MarkupSafe==0.23
 matplotlib==2.1.0
 mimerender==0.6.0
